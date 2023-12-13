@@ -12,25 +12,26 @@ def Fiedler(G):
 
     Parameters: G -> type: matrix
 
-    Returns: F_G -> matrix
+    Returns: Fiedler_A -> type: matrix
 
     '''
 
     # If G is in csr format, convert to dense, then compute adjacency matrix
-    if type(G) == scipy.sparse._csr.csr_array:
-        G = G.todense()
-    A = nx.adjacency_matrix(G)
+    # if type(G) == scipy.sparse._csr.csr_array:
+    #     G = G.todense()
+    # A = nx.adjacency_matrix(G)
 
     # Compute the Laplacian matrix
-    L = nx.laplacian_matrix(G)
+    L = scipy.sparse.csgraph.laplacian(G)
     
     # Find first 2 eigenvectors
     _, eig_vectors = eigs(L.astype('float64'), k=2, which='SM', maxiter=3000, tol=0.01)
 
     # Select second eigen vector
-    Fiedler_vector = np.argsort(eig_vectors[:, 0])
+    Fiedler_vector = np.argsort(eig_vectors[:, 1])
 
     # Reorder nodes according to the second eigenvector
-    Fiedler_A = A[Fiedler_vector, :][:, Fiedler_vector]
+    Fiedler_G = G[Fiedler_vector, Fiedler_vector]
 
-    return Fiedler_A
+    return Fiedler_G
+
