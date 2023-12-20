@@ -27,9 +27,10 @@ def RCM(G):
 
     # Reorder nodes according to RCM heuristic
     # RCM_A = G[np.ix_(RCM_ordering, RCM_ordering)]
-    RCM_G = G[RCM_ordering, RCM_ordering]
+    RCM_G = G[RCM_ordering, :][:, RCM_ordering]
 
-    return RCM_G 
+    return csr_matrix(RCM_G) 
+
 
 
 
