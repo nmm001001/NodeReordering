@@ -22,16 +22,16 @@ def Fiedler(G):
     # A = nx.adjacency_matrix(G)
 
     # Compute the Laplacian matrix
-    L = scipy.sparse.csgraph.laplacian(G)
+    L = scipy.sparse.csgraph.laplacian(G).astype('float64')
     
     # Find first 2 eigenvectors
-    _, eig_vectors = eigs(L.astype('float64'), k=2, which='SM', maxiter=3000, tol=0.01)
+    _, eig_vectors = eigs(L.astype('float64'), k=2, which='SM', maxiter=30000, tol=0.0001)
 
     # Select second eigen vector
     Fiedler_vector = np.argsort(eig_vectors[:, 1])
 
     # Reorder nodes according to the second eigenvector
-    Fiedler_G = G[Fiedler_vector, Fiedler_vector]
+    Fiedler_G = G[Fiedler_vector,:][:, Fiedler_vector]
 
-    return Fiedler_G
+    return csr_matrix(Fiedler_G)
 
